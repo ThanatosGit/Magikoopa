@@ -299,14 +299,15 @@ void PatchMaker::insert()
     delete newCodeFile;
 
     emit updateStatus("Fixing Exheader");
-    fixExheader(loaderDataEnd + m_hookLinker.extraDataSize() - m_newCodeOffset);
+    quint32 newTextCodeSize = loaderTextEnd + m_loaderHookLinker.extraDataSize() - 0x100000;
+    fixExheader(loaderDataEnd + m_hookLinker.extraDataSize() - m_newCodeOffset, newTextCodeSize);
 }
 
-void PatchMaker::fixExheader(quint32 newCodeSize)
+void PatchMaker::fixExheader(quint32 newCodeSize, quint32 newTextCodeSize)
 {
     Exheader exHeader(new ExternalFile(m_path + "/exheader.bin"));
 
-    exHeader.data.sci.textCodeSetInfo.size = exHeader.data.sci.textCodeSetInfo.physicalRegionSize << 12;
+    exHeader.data.sci.textCodeSetInfo.size = newTextCodeSize;
 
     qDebug() << QString("Data size: %1").arg(exHeader.data.sci.dataCodeSetInfo.physicalRegionSize << 12, 8, 0x10, QChar('0')).toLatin1().data();;
     qDebug() << QString("BSS size: %1").arg(((exHeader.data.sci.bssSize + 0xFFF) & ~0xFFF), 8, 0x10, QChar('0')).toLatin1().data();;

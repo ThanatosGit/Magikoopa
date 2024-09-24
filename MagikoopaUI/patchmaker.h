@@ -46,7 +46,7 @@ private:
     void restoreFromBackup();
 
     void insert();
-    void fixExheader(quint32 newCodeSize);
+    void fixExheader(quint32 newCodeSize, quint32 newTextCodeSize);
     void postHook();
     void allDone();
 
